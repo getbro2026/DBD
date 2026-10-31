@@ -24,5 +24,7 @@ export type Challenge = {
   acceptedLabel: string;
   sponsor?: string;
   uri?: string;
+  /** Optional YouTube reference clip, used when there is no uri. */
+  youtubeId?: string;
   responses: Response[];
 };

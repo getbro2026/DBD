@@ -7,6 +7,7 @@ export const sampleChallenges: Challenge[] = [
     tag: '#BabyStepChallenge',
     creator: { handle: '@riya.moves', initials: 'RK' },
     durationSec: 45,
+    youtubeId: 'wb7pKmS_9PU',
     acceptedLabel: '18.4k accepted',
     responses: [
       { id: 'r1', creator: { handle: '@arjun.beats', initials: 'AM' }, durationSec: 44, likes: 2100, accuracy: 86 },

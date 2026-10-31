@@ -34,6 +34,7 @@ export function SplitView({ challenge, response, responseIndex, side, playing, t
         t={t}
         playing={playing}
         uri={challenge.uri}
+        youtubeId={challenge.youtubeId}
         muted={false}
         narrow={side}
       />
