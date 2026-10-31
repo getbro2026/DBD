@@ -20,6 +20,7 @@ export const sampleChallenges: Challenge[] = [
     tag: '#ShoulderRoll30',
     creator: { handle: '@dev.on.beat', initials: 'DB' },
     durationSec: 32,
+    youtubeId: 'dTSmoxLnHRs',
     acceptedLabel: '9.1k accepted',
     responses: [
       { id: 'r4', creator: { handle: '@isha.in.motion', initials: 'II' }, durationSec: 33, likes: 1300, accuracy: 81 },
