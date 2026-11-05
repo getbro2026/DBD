@@ -4,7 +4,6 @@ import { useVideoPlayer, VideoView } from 'expo-video';
 import { formatTime } from '../lib/clip';
 import { colors, radius } from '../theme';
 import { Dancer } from './Dancer';
-import { YouTubeClip } from './YouTubeClip';
 
 type Props = {
   role: 'original' | 'response';
@@ -17,8 +16,6 @@ type Props = {
   t: number;
   playing: boolean;
   uri?: string;
-  /** YouTube reference clip, shown when there is no uri */
-  youtubeId?: string;
   /** Only the original plays sound in the split screen */
   muted?: boolean;
   /** Smaller type and the time chip moves up when panes sit side by side */
@@ -53,7 +50,7 @@ function VideoClip({ uri, playing, muted }: { uri: string; playing: boolean; mut
 }
 
 export function ClipPane(props: Props) {
-  const { role, handle, initials, subtitle, bottomLabel, durationSec, t, playing, uri, youtubeId, muted, narrow, badge } = props;
+  const { role, handle, initials, subtitle, bottomLabel, durationSec, t, playing, uri, muted, narrow, badge } = props;
   const isOriginal = role === 'original';
   const bg = isOriginal ? colors.original : colors.response;
   const chip = isOriginal ? colors.originalChip : colors.responseChip;
@@ -67,8 +64,6 @@ export function ClipPane(props: Props) {
     <View style={[styles.pane, { backgroundColor: bg }]}>
       {uri ? (
         <VideoClip uri={uri} playing={playing} muted={muted ?? true} />
-      ) : youtubeId ? (
-        <YouTubeClip videoId={youtubeId} playing={playing} muted={muted ?? true} />
       ) : (
         <View style={styles.figure}>
           <Dancer color={figure} size={narrow ? 96 : 112} playing={dancing} delayMs={isOriginal ? 0 : 150} />

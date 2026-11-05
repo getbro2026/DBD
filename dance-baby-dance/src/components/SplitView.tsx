@@ -1,22 +1,26 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Challenge, Response } from '../types';
+import { ChallengeCard, ResponseItem } from '../types';
 import { colors } from '../theme';
 import { ClipPane } from './ClipPane';
 
 type Props = {
-  challenge: Challenge;
-  response?: Response;
+  challenge: ChallengeCard;
+  response?: ResponseItem;
   responseIndex: number;
+  responseCount: number;
   /** true = side by side, false = stacked */
   side: boolean;
   playing: boolean;
   t: number;
   onTogglePlay: () => void;
+  onOpenProfile?: (handle: string) => void;
 };
 
+const initials = (name: string) => name.slice(0, 2).toUpperCase();
+
 /** The core of the app: the original on top (or left) and one response below (or right). */
-export function SplitView({ challenge, response, responseIndex, side, playing, t, onTogglePlay }: Props) {
+export function SplitView({ challenge, response, responseIndex, responseCount, side, playing, t, onTogglePlay, onOpenProfile }: Props) {
   return (
     <Pressable
       style={[styles.pair, { flexDirection: side ? 'row' : 'column' }]}
@@ -26,30 +30,28 @@ export function SplitView({ challenge, response, responseIndex, side, playing, t
     >
       <ClipPane
         role="original"
-        handle={challenge.creator.handle}
-        initials={challenge.creator.initials}
+        handle={`@${challenge.creator.handle}`}
+        initials={initials(challenge.creator.displayName)}
         subtitle="Original challenge"
         bottomLabel={challenge.tag}
         durationSec={challenge.durationSec}
         t={t}
         playing={playing}
-        uri={challenge.uri}
-        youtubeId={challenge.youtubeId}
+        uri={challenge.videoUrl}
         muted={false}
         narrow={side}
       />
-
       {response ? (
         <ClipPane
           role="response"
-          handle={response.creator.handle}
-          initials={response.creator.initials}
+          handle={`@${response.creator.handle}`}
+          initials={initials(response.creator.displayName)}
           subtitle="Accepted and tagged"
-          bottomLabel={`Response ${responseIndex + 1} of ${challenge.responses.length}`}
+          bottomLabel={`Response ${responseIndex + 1} of ${responseCount}`}
           durationSec={response.durationSec}
           t={t}
           playing={playing}
-          uri={response.uri}
+          uri={response.videoUrl}
           muted
           narrow={side}
           badge={response.accuracy ? `${response.accuracy}%` : undefined}
@@ -60,7 +62,6 @@ export function SplitView({ challenge, response, responseIndex, side, playing, t
           <Text style={styles.emptyBody}>Nobody has answered this challenge yet. Tap Accept challenge to be first.</Text>
         </View>
       )}
-
       {!playing && (
         <View style={styles.pausedWrap} pointerEvents="none">
           <View style={styles.pausedBadge}>

@@ -1,205 +1,110 @@
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { RecorderStep } from '../components/RecorderStep';
+import { useMutation, useQuery } from 'convex/react';
+import { api, useFirebaseUser } from '../lib/backend';
+import { uploadFileToStorage } from '../lib/firebase';
 import { checkClipLength, formatTime, MAX_CLIP_SEC, MIN_CLIP_SEC } from '../lib/clip';
-import { useApp } from '../store';
-import { colors, radius } from '../theme';
-
-type Props = {
-  /** Set when accepting a challenge. Leave empty to start a new challenge. */
-  challengeId?: string;
-  onDone: (challengeId: string) => void;
-  onCancel: () => void;
-};
+import { RecorderStep } from '../components/RecorderStep';
+import { useNav } from '../nav';
+import { colors } from '../theme';
+import { ChallengeDetail } from '../types';
+import { Btn, errMsg, ErrorText, Field, Muted, Title } from '../components/ui';
 
 type Clip = { uri: string; durationSec: number };
 
-const ME = { handle: '@you', initials: 'YOU' };
-
-function normalizeTag(input: string): string {
-  const cleaned = input.replace(/[^A-Za-z0-9_]/g, '');
-  return cleaned ? `#${cleaned}` : '';
-}
-
-export function CreateScreen({ challengeId, onDone, onCancel }: Props) {
-  const { challenges, addChallenge, addResponse } = useApp();
-  const challenge = challenges.find((c) => c.id === challengeId);
+export function CreateScreen({ acceptId }: { acceptId?: string }) {
+  const { go, back } = useNav();
+  const { user } = useFirebaseUser();
+  const detail = useQuery(api.challenges.get, acceptId ? { id: acceptId } : 'skip') as ChallengeDetail | null | undefined;
+  const createChallenge = useMutation(api.challenges.create);
+  const addResponse = useMutation(api.challenges.addResponse);
 
   const [step, setStep] = useState<'pick' | 'record' | 'details'>('pick');
   const [clip, setClip] = useState<Clip | null>(null);
+  const [tag, setTag] = useState('');
   const [caption, setCaption] = useState('');
-  const [tagInput, setTagInput] = useState('');
   const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  if (!user) {
+    return (
+      <View style={styles.body}>
+        <Title>Log in to post</Title>
+        <Muted>Create an account to start challenges and accept them.</Muted>
+        <Btn label="Log in or sign up" onPress={() => go({ name: 'login' })} />
+      </View>
+    );
+  }
+
+  const target = detail?.challenge;
+  const check = clip ? checkClipLength(clip.durationSec) : null;
 
   const pickVideo = async () => {
     setError('');
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['videos'],
-      allowsEditing: true,
-      videoMaxDuration: MAX_CLIP_SEC,
-      quality: 1,
-    });
+    const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['videos'], allowsEditing: true, videoMaxDuration: MAX_CLIP_SEC, quality: 1 });
     if (result.canceled) return;
     const asset = result.assets[0];
-    if (asset.duration == null) {
-      setError("Couldn't read the length of that video. Pick another one.");
-      return;
-    }
+    if (asset.duration == null) return setError("Couldn't read the length of that video. Pick another one.");
     // expo-image-picker reports video duration in milliseconds.
     setClip({ uri: asset.uri, durationSec: asset.duration / 1000 });
     setStep('details');
   };
 
-  const post = () => {
-    if (!clip) return;
-    const check = checkClipLength(clip.durationSec);
-    if (!check.ok) {
-      setError(check.message);
-      return;
+  const post = async () => {
+    if (!clip || !check?.ok) return;
+    setError('');
+    setBusy(true);
+    try {
+      const ext = clip.uri.toLowerCase().includes('.mov') ? 'mov' : 'mp4';
+      const videoUrl = await uploadFileToStorage(clip.uri, `videos/${user.uid}/${Date.now()}.${ext}`, ext === 'mov' ? 'video/quicktime' : 'video/mp4');
+      if (acceptId) {
+        await addResponse({ challengeId: acceptId, caption, videoUrl, durationSec: clip.durationSec });
+        go({ name: 'challenge', id: acceptId });
+      } else {
+        const id = (await createChallenge({ tag, caption, videoUrl, durationSec: clip.durationSec })) as string;
+        go({ name: 'challenge', id });
+      }
+    } catch (e) {
+      setError(errMsg(e, 'Could not post. Try again.'));
+    } finally {
+      setBusy(false);
     }
-    if (challenge) {
-      addResponse(challenge.id, {
-        id: `r${Date.now()}`,
-        creator: ME,
-        durationSec: clip.durationSec,
-        likes: 0,
-        caption: caption.trim() || undefined,
-        uri: clip.uri,
-      });
-      onDone(challenge.id);
-      return;
-    }
-    const tag = normalizeTag(tagInput);
-    if (tag.length < 4) {
-      setError('Name your challenge with at least 3 letters, for example BabyStepChallenge.');
-      return;
-    }
-    const id = `c${Date.now()}`;
-    addChallenge({
-      id,
-      tag,
-      creator: ME,
-      durationSec: clip.durationSec,
-      acceptedLabel: '0 accepted',
-      uri: clip.uri,
-      responses: [],
-    });
-    onDone(id);
   };
 
   if (step === 'record') {
-    return (
-      <RecorderStep
-        challenge={challenge}
-        onCancel={() => setStep('pick')}
-        onRecorded={(c) => {
-          setClip(c);
-          setError('');
-          setStep('details');
-        }}
-      />
-    );
+    return <RecorderStep challenge={target} onCancel={() => setStep('pick')} onRecorded={(c) => { setClip(c); setError(''); setStep('details'); }} />;
   }
 
-  const check = clip ? checkClipLength(clip.durationSec) : null;
-
   return (
-    <View style={styles.root}>
-      <View style={styles.top}>
-        <Text style={styles.title}>{challenge ? 'accept challenge' : 'new challenge'}</Text>
-        <Pressable style={styles.ghost} onPress={onCancel} accessibilityRole="button">
-          <Text style={styles.ghostText}>Close</Text>
-        </Pressable>
-      </View>
+    <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
+      <Title>{acceptId ? (target?.tag ?? 'Accept challenge') : 'Show your step'}</Title>
+      <Muted>
+        Clips run {formatTime(MIN_CLIP_SEC)} to {formatTime(MAX_CLIP_SEC)}.
+        {acceptId && target ? ` Your response is posted next to @${target.creator.handle}'s original and they are tagged.` : ''}
+      </Muted>
 
-      <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
-        {step === 'pick' ? (
-          <>
-            <Text style={styles.h}>{challenge ? challenge.tag : 'Show your step'}</Text>
-            <Text style={styles.muted}>
-              Clips run {formatTime(MIN_CLIP_SEC)} to {formatTime(MAX_CLIP_SEC)}.
-              {challenge ? ` Your response is posted next to ${challenge.creator.handle}'s original and they are tagged.` : ''}
-            </Text>
-            <Pressable style={styles.cta} onPress={() => { setError(''); setStep('record'); }} accessibilityRole="button">
-              <Text style={styles.ctaText}>Record now</Text>
-            </Pressable>
-            <Pressable style={styles.ghostWide} onPress={pickVideo} accessibilityRole="button">
-              <Text style={styles.ghostText}>Upload a video</Text>
-            </Pressable>
-            {error ? <Text style={styles.bad}>{error}</Text> : null}
-          </>
-        ) : (
-          <>
-            <Text style={styles.h}>Add details</Text>
-            {check ? <Text style={check.ok ? styles.ok : styles.bad}>{check.message}</Text> : null}
-
-            {!challenge ? (
-              <View style={styles.field}>
-                <Text style={styles.label}>Challenge name</Text>
-                <TextInput
-                  style={styles.input}
-                  value={tagInput}
-                  onChangeText={(v) => { setTagInput(v); setError(''); }}
-                  placeholder="BabyStepChallenge"
-                  placeholderTextColor={colors.muted}
-                  autoCapitalize="none"
-                  maxLength={30}
-                />
-              </View>
-            ) : (
-              <Text style={styles.muted}>Tagging {challenge.creator.handle} automatically.</Text>
-            )}
-
-            <View style={styles.field}>
-              <Text style={styles.label}>Caption</Text>
-              <TextInput
-                style={styles.input}
-                value={caption}
-                onChangeText={setCaption}
-                placeholder="My take on the step"
-                placeholderTextColor={colors.muted}
-                maxLength={80}
-              />
-            </View>
-
-            {error && check?.ok !== false ? <Text style={styles.bad}>{error}</Text> : null}
-
-            <View style={styles.row}>
-              <Pressable style={styles.cta} onPress={post} accessibilityRole="button">
-                <Text style={styles.ctaText}>{challenge ? 'Post response' : 'Post challenge'}</Text>
-              </Pressable>
-              <Pressable
-                style={styles.ghostWide}
-                onPress={() => { setClip(null); setError(''); setStep('pick'); }}
-                accessibilityRole="button"
-              >
-                <Text style={styles.ghostText}>{check && !check.ok ? 'Choose another' : 'Retake'}</Text>
-              </Pressable>
-            </View>
-          </>
-        )}
-      </ScrollView>
-    </View>
+      {step === 'pick' || !clip ? (
+        <>
+          <Btn label="Record now" onPress={() => { setError(''); setStep('record'); }} />
+          <Btn label="Upload a video" kind="ghost" onPress={pickVideo} />
+        </>
+      ) : (
+        <>
+          <Text style={check?.ok ? styles.ok : styles.bad}>{check?.message}</Text>
+          {!acceptId ? <Field label="Challenge name" value={tag} onChangeText={setTag} placeholder="BabyStepChallenge" autoCapitalize="none" maxLength={31} /> : null}
+          <Field label="Caption" value={caption} onChangeText={setCaption} placeholder="My take on the step" maxLength={120} />
+          <Btn label={busy ? 'Uploading...' : acceptId ? 'Post response' : 'Post challenge'} busy={busy} disabled={!check?.ok || (!acceptId && tag.replace(/^#/, '').length < 3)} onPress={post} />
+          <Btn label={check && !check.ok ? 'Choose another' : 'Retake'} kind="ghost" disabled={busy} onPress={() => { setClip(null); setStep('pick'); }} />
+        </>
+      )}
+      <ErrorText>{error}</ErrorText>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
-  top: { height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14 },
-  title: { color: colors.text, fontSize: 17, fontWeight: '800' },
   body: { padding: 16, gap: 14 },
-  h: { color: colors.text, fontSize: 22, fontWeight: '800' },
-  muted: { color: colors.muted, fontSize: 14, lineHeight: 20 },
   ok: { color: colors.ok, fontSize: 14 },
   bad: { color: colors.danger, fontSize: 14 },
-  field: { gap: 6 },
-  label: { color: colors.muted, fontSize: 13 },
-  input: { backgroundColor: colors.surface, borderWidth: 1, borderColor: '#4A3D57', borderRadius: radius.sm, color: colors.text, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14 },
-  row: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
-  cta: { backgroundColor: colors.accent, borderRadius: radius.pill, paddingHorizontal: 18, paddingVertical: 12, alignSelf: 'flex-start' },
-  ctaText: { color: colors.onAccent, fontSize: 14, fontWeight: '700' },
-  ghost: { borderWidth: 1, borderColor: '#4A3D57', borderRadius: radius.pill, paddingHorizontal: 12, paddingVertical: 6 },
-  ghostWide: { borderWidth: 1, borderColor: '#4A3D57', borderRadius: radius.pill, paddingHorizontal: 18, paddingVertical: 12, alignSelf: 'flex-start' },
-  ghostText: { color: colors.text, fontSize: 14 },
 });

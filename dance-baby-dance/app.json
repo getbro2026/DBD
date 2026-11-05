@@ -1,14 +1,15 @@
 {
   "expo": {
-    "name": "Dance Baby Dance",
-    "slug": "dance-baby-dance",
+    "name": "Saathi",
+    "slug": "saathi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.getbro2026.dancebabydance"
+      "bundleIdentifier": "com.getbro2026.saathi",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +19,8 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.getbro2026.dancebabydance"
+      "package": "com.getbro2026.saathi",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -28,18 +30,34 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Dance Baby Dance uses the camera to record your dance.",
-          "microphonePermission": "Dance Baby Dance uses the microphone to record sound with your dance.",
+          "cameraPermission": "Saathi uses the camera to record your dance or song.",
+          "microphonePermission": "Saathi uses the microphone to record sound with your video.",
           "recordAudioAndroid": true
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Dance Baby Dance opens your videos so you can upload a dance."
+          "photosPermission": "Saathi opens your videos so you can upload them."
         }
       ],
-      "expo-video"
+      "expo-video",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.REPLACE_WITH_YOUR_IOS_CLIENT_ID"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
     ]
   }
 }

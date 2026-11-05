@@ -1,64 +1,72 @@
-# Dance Baby Dance (Expo app, first slice)
+# Saathi
 
-A short-video dance challenge app. Someone posts a dance step of 30 seconds to 1 minute, others accept it, record or upload the same step, and the response is shown next to the original in a split screen with the original creator tagged.
+Dance challenges and singing duets, side by side. A person posts a step (30 seconds to 1 minute), others accept it, and each response plays beside the original with the creator tagged.
 
-## What works in this slice
+One Expo codebase runs on Android, iOS and the web.
 
-- Feed with the split-screen view. Switch between stacked and side by side. Tap to pause both clips.
-- Step through the responses to a challenge, like a response, share a challenge.
-- Trending list that opens a challenge in the feed.
-- Create flow: record in the app (3-2-1 countdown, ghost overlay and reference clip when accepting) or upload a video.
-- Clip length rule of 30 seconds to 1 minute, checked on record and on upload, with a plain message when a clip is too short or too long.
-- Posting adds the response to the challenge, or creates a new challenge.
+## How it is built
 
-Everything is held in memory with sample data. Restarting the app resets it. Clips in the sample data show an animated stick figure instead of video.
+| Part | What it does |
+|---|---|
+| **Firebase Authentication** | Sign in with Google or a phone number (text-message code) |
+| **Firebase Storage** | Holds the videos. Public to watch, only the owner can upload |
+| **Convex** | The database and live updates: challenges, responses, likes, comments, subscriptions, alerts, reports |
+| **Expo / React Native** | The app. Camera recording, upload, split-screen playback |
 
-## Status
-
-Type-checked and bundled for Android and iOS on Expo SDK 58 (React Native 0.88). The feed, both split layouts, Trending and the create screen were rendered and clicked through with no errors. Camera recording and video upload still need a test on a real phone, since they can't run without one.
-
-Fixed in this pass:
-- Two React Native APIs that newer versions removed (`StyleSheet.absoluteFillObject`, status bar background color).
-- Safe areas now use `react-native-safe-area-context`, so the tab bar no longer sits under the Android navigation bar (newer Expo is edge-to-edge only).
-- Camera and microphone permissions are asked one after the other. If access was turned off, the button opens Settings.
-- Cancel during the 3-2-1 countdown goes back to the ready state instead of closing the screen.
-- Leaving the recorder mid-recording stops the camera and discards the clip.
-- The Android back button returns to the feed instead of closing the app.
-- `app.json` has the app name, dark theme and the camera, microphone and photo-library permission texts.
-
-## Run it
-
-This is a complete Expo project.
+Convex trusts Firebase sign-in tokens, so a person signs in once and both services know who they are.
 
 ```
+App.tsx                      tabs and navigation
+src/lib/firebase.ts          sign-in and upload on the web
+src/lib/firebase.native.ts   the same on Android and iOS
+src/lib/backend.tsx          connects Convex to Firebase sign-in
+src/screens/                 Home, Trending, Challenge, Create, Profile, Alerts, Login
+convex/                      database schema and server functions
+storage.rules                Firebase Storage security rules
+```
+
+## Set it up (about 30 minutes)
+
+You need a Google account for Firebase and a free Convex account.
+
+### 1. Firebase
+1. Create a project at https://console.firebase.google.com.
+2. **Authentication**, Sign-in method: turn on **Google** and **Phone**.
+3. **Storage**: create the default bucket, then paste `storage.rules` into its Rules tab and publish.
+4. **Project settings, Your apps**: add a **Web app**, then copy its config into `.env` (see `.env.example`).
+5. For phones also add an **Android app** (package `com.getbro2026.saathi`) and an **iOS app** (bundle `com.getbro2026.saathi`). Download `google-services.json` and `GoogleService-Info.plist` into this folder. For Android add your signing certificate's SHA-1 and SHA-256 fingerprints.
+6. Copy the **Web client ID** (Authentication, Google provider) into `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`. In `app.json` replace `REPLACE_WITH_YOUR_IOS_CLIENT_ID` with your iOS client ID.
+7. Phone sign-in needs the Blaze (pay as you go) plan once you go past Firebase's free test numbers. Texts cost money.
+
+### 2. Convex
+```bash
 npm install
-npx expo start
+npx convex dev
+```
+Log in when asked and create a project. It prints your URL: put it in `.env` as `EXPO_PUBLIC_CONVEX_URL`. It also writes `convex/_generated`.
+
+In the Convex dashboard, Settings, Environment Variables, add `FIREBASE_PROJECT_ID` with your Firebase project id. Convex uses it to check sign-in tokens (`convex/auth.config.ts`).
+
+### 3. Run it
+```bash
+npm run web          # in the browser
+```
+On phones the app uses native Firebase, so it will not run in Expo Go. Make a development or test build:
+```bash
+npx eas-cli build -p android --profile preview    # APK you can install
+npx eas-cli build -p ios --profile preview        # needs an Apple developer account
 ```
 
-Scan the QR code with the Expo Go app on your phone. Expo Go must support SDK 58, which the current store version does.
+## Before a public launch
+- Test sign-in, recording, upload and the split screen on real phones.
+- There is no screen for reviewing reports yet. Reports are stored in the `reports` table, which you can read in the Convex dashboard.
+- Add a Privacy Policy, Terms of Use and a way to delete an account. Decide a minimum age.
+- Decide how music and copyrighted videos are handled, and how takedowns work.
+- Set Firebase and Convex budget alerts. Video storage and streaming costs grow with use.
+- The match score is not built into this version yet.
 
-## Folder map
-
+## Type-check
+```bash
+npx tsc --noEmit
+npx tsc --noEmit -p convex
 ```
-App.tsx                      tab bar and routing
-src/store.tsx                app state (challenges, likes, layout)
-src/data/sample.ts           sample challenges and responses
-src/lib/clip.ts              30s to 1 min rule, time formatting
-src/lib/usePlayhead.ts       shared playhead for the split screen
-src/components/SplitView.tsx the split screen
-src/components/ClipPane.tsx  one clip: video or placeholder, tag, timer
-src/components/Dancer.tsx    animated placeholder figure
-src/components/RecorderStep.tsx  camera, countdown, recording
-src/screens/FeedScreen.tsx
-src/screens/TrendingScreen.tsx
-src/screens/CreateScreen.tsx
-```
-
-## Next steps, in order
-
-1. Test recording and upload on a real Android phone and iPhone.
-2. Add a backend. Supabase or Firebase for sign-in and data (users, challenges, responses, likes, tags), and Mux or Cloudflare Stream to upload and stream video.
-3. Replace the shared playhead with the real video player clock so both clips stay in sync.
-4. Licensed sound library, and report and block.
-5. Sponsored challenges, then tips and subscription.
-6. Accuracy score last. It is the hardest piece, and the sample data only shows a placeholder number.

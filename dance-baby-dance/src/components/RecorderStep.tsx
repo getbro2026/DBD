@@ -3,12 +3,11 @@ import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { CameraView, useCameraPermissions, useMicrophonePermissions } from 'expo-camera';
 import { formatTime, MAX_CLIP_SEC, MIN_CLIP_SEC } from '../lib/clip';
 import { colors, radius } from '../theme';
-import { Challenge } from '../types';
 import { Dancer } from './Dancer';
 
 type Props = {
   /** Set when accepting a challenge. Shows the reference clip and a ghost outline. */
-  challenge?: Challenge;
+  challenge?: { tag: string };
   onRecorded: (clip: { uri: string; durationSec: number }) => void;
   onCancel: () => void;
 };
