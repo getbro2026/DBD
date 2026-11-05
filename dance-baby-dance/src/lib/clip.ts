@@ -1,5 +1,5 @@
-/** Every dance clip must run from 30 seconds to 1 minute. */
-export const MIN_CLIP_SEC = 30;
+/** Every dance clip must run from 10 seconds to 1 minute. */
+export const MIN_CLIP_SEC = 10;
 export const MAX_CLIP_SEC = 60;
 
 export function formatTime(totalSec: number): string {
@@ -24,7 +24,7 @@ export function checkClipLength(durationSec: number): ClipCheck {
       message: `This clip is ${formatTime(durationSec)}. Trim it to ${formatTime(MAX_CLIP_SEC)} or less.`,
     };
   }
-  return { ok: true, message: `Length ${formatTime(durationSec)} is within 0:30 to 1:00.` };
+  return { ok: true, message: `Length ${formatTime(durationSec)} is within ${formatTime(MIN_CLIP_SEC)} to ${formatTime(MAX_CLIP_SEC)}.` };
 }
 
 export function formatCount(n: number): string {

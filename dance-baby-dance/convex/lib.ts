@@ -41,11 +41,11 @@ export async function requireViewer(ctx: QueryCtx | MutationCtx): Promise<Doc<"u
   return me;
 }
 
-export const MIN_CLIP_SEC = 30;
+export const MIN_CLIP_SEC = 10;
 export const MAX_CLIP_SEC = 60;
 
 export function checkClip(durationSec: number, videoUrl: string) {
-  if (!(durationSec >= MIN_CLIP_SEC)) throw new Error("Dances need at least 0:30.");
+  if (!(durationSec >= MIN_CLIP_SEC)) throw new Error("Dances need at least 0:10.");
   if (!(durationSec <= MAX_CLIP_SEC)) throw new Error("Trim it to 1:00 or less.");
   if (!/^https:\/\//.test(videoUrl) || videoUrl.length > 1000) throw new Error("That video link is not valid.");
 }

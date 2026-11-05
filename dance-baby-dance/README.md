@@ -1,6 +1,6 @@
 # Naalnachana
 
-Dance challenges and singing duets, side by side. A person posts a step (30 seconds to 1 minute), others accept it, and each response plays beside the original with the creator tagged.
+Dance challenges and singing duets, side by side. A person posts a step (10 seconds to 1 minute), others accept it, and each response plays beside the original with the creator tagged.
 
 One Expo codebase runs on Android, iOS and the web.
 
