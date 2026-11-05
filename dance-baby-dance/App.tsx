@@ -93,7 +93,7 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  safe: { flex: 1, width: '100%', maxWidth: 480, alignSelf: 'center' },
   body: { flex: 1 },
   warn: { color: colors.onAccent, backgroundColor: colors.sun, padding: 8, fontSize: 12, textAlign: 'center' },
   back: { minHeight: 44, paddingHorizontal: 16, justifyContent: 'center' },
