@@ -8,7 +8,7 @@
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.getbro2026.naalnachana",
+      "bundleIdentifier": "com.naalnachana.app",
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
@@ -19,7 +19,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.getbro2026.naalnachana",
+      "package": "com.naalnachana.app",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
