@@ -7,6 +7,7 @@ import { api, BackendProvider, convexConfigured, useFirebaseUser } from './src/l
 import { NavProvider } from './src/nav';
 import { colors, glass } from './src/theme';
 import { Backdrop } from './src/components/Backdrop';
+import { Logo } from './src/components/Logo';
 import { Route } from './src/types';
 import { AlertsScreen } from './src/screens/AlertsScreen';
 import { ChallengeScreen } from './src/screens/ChallengeScreen';
@@ -69,6 +70,7 @@ function Shell() {
         {stack.length > 1 ? (
           <Pressable style={styles.back} onPress={back} accessibilityRole="button" accessibilityLabel="Back"><Text style={styles.backText}>‹ Back</Text></Pressable>
         ) : null}
+        {stack.length === 1 ? <View style={styles.brand}><Logo /></View> : null}
         <View style={styles.body}>{body}</View>
         <View style={styles.nav}>
           {tab('Home', { name: 'home' }, route.name === 'home')}
@@ -95,6 +97,7 @@ export default function App() {
 const styles = StyleSheet.create({
   safe: { flex: 1, width: '100%', maxWidth: 480, alignSelf: 'center' },
   body: { flex: 1 },
+  brand: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 2 },
   warn: { color: colors.onAccent, backgroundColor: colors.sun, padding: 8, fontSize: 12, textAlign: 'center' },
   back: { minHeight: 44, paddingHorizontal: 16, justifyContent: 'center' },
   backText: { color: colors.text, fontSize: 16, fontWeight: '700' },
