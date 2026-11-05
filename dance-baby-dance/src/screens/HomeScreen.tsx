@@ -43,7 +43,7 @@ export function HomeScreen() {
             ['Subscribed', summary.stats.subscribed],
             ['Likes given', summary.stats.likesGiven],
           ].map(([label, n], i) => (
-            <View key={String(label)} style={[styles.stat, i > 0 && { borderLeftWidth: 1, borderLeftColor: colors.line }]}>
+            <View key={String(label)} style={[styles.stat, i > 0 && { borderLeftWidth: 1, borderLeftColor: colors.edge }]}>
               <Text style={styles.statN}>{n}</Text>
               <Text style={styles.statL}>{label}</Text>
             </View>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   stat: { flex: 1, alignItems: 'center', paddingVertical: 12 },
   statN: { color: colors.text, fontSize: 20, fontWeight: '800' },
   statL: { color: colors.muted, fontSize: 12 },
-  empty: { alignItems: 'center', gap: 12, padding: 20, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.line, borderRadius: radius.md },
+  empty: { alignItems: 'center', gap: 12, padding: 20, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.edge, borderRadius: radius.md },
   person: { width: 140, alignItems: 'center', gap: 6, padding: 12, borderRadius: radius.md, backgroundColor: colors.surface },
   personName: { color: colors.text, fontWeight: '700', maxWidth: 120 },
 });

@@ -70,3 +70,20 @@ npx eas-cli build -p ios --profile preview        # needs an Apple developer acc
 npx tsc --noEmit
 npx tsc --noEmit -p convex
 ```
+
+## Build the web app and the Android app
+
+Web (static files in `dist/`, host anywhere, for example Firebase Hosting or Netlify):
+
+```bash
+npm run build:web
+```
+
+Android APK (built in the cloud by Expo, no Android Studio needed):
+
+```bash
+npx eas-cli login
+npx eas-cli build --platform android --profile preview
+```
+
+Before the Android build, put your `google-services.json` in this folder (Firebase console, Project settings, Android app `com.naalnachana.app`). The build prints a download link for the `.apk`.

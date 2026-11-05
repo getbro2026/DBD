@@ -50,13 +50,11 @@ function VideoClip({ uri, playing, muted }: { uri: string; playing: boolean; mut
 }
 
 export function ClipPane(props: Props) {
-  const { role, handle, initials, subtitle, bottomLabel, durationSec, t, playing, uri, muted, narrow, badge } = props;
+  const { role, handle, initials, durationSec, t, playing, uri, muted, narrow, badge } = props;
   const isOriginal = role === 'original';
   const bg = isOriginal ? colors.original : colors.response;
-  const chip = isOriginal ? colors.originalChip : colors.responseChip;
   const figure = isOriginal ? colors.originalFigure : colors.responseFigure;
-  const avatarBg = isOriginal ? '#BFE9ED' : '#FFD0DD';
-  const avatarFg = isOriginal ? colors.originalChip : colors.responseChip;
+  const avatarBg = isOriginal ? '#9FE9F1' : '#FFC3D4';
   const shown = Math.min(t, durationSec);
   const dancing = playing && t < durationSec;
 
@@ -70,26 +68,23 @@ export function ClipPane(props: Props) {
         </View>
       )}
 
-      <View style={styles.meta}>
+      <View style={[styles.chip, styles.who, { left: 8, bottom: 8, maxWidth: narrow ? '92%' : '58%' }]}>
         <View style={[styles.avatar, { backgroundColor: avatarBg }]}>
-          <Text style={[styles.avatarText, { color: avatarFg }]}>{initials}</Text>
+          <Text style={styles.avatarText}>{initials}</Text>
         </View>
-        <View style={styles.who}>
-          <Text style={styles.handle} numberOfLines={1}>{handle}</Text>
-          <Text style={styles.sub} numberOfLines={1}>{subtitle}</Text>
-        </View>
+        <Text style={styles.handle} numberOfLines={1}>{handle}</Text>
       </View>
 
-      <View style={[styles.chip, { backgroundColor: chip }, narrow ? styles.chipNarrow : styles.chipWide]}>
+      <View style={[styles.chip, styles.time, narrow ? { left: 8, top: 8 } : { right: 8, bottom: 14 }]}>
         <Text style={styles.chipText}>
           {formatTime(shown)} / {formatTime(durationSec)}
           {badge ? `  ·  ${badge}` : ''}
         </Text>
       </View>
 
-      <View style={[styles.tag, { backgroundColor: chip }]}>
-        <Text style={styles.tagText} numberOfLines={1}>{bottomLabel}</Text>
-      </View>
+      {isOriginal ? (
+        <View style={styles.original}><Text style={styles.originalText}>ORIGINAL</Text></View>
+      ) : null}
     </View>
   );
 }
@@ -97,16 +92,13 @@ export function ClipPane(props: Props) {
 const styles = StyleSheet.create({
   pane: { flex: 1, overflow: 'hidden' },
   figure: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
-  meta: { position: 'absolute', top: 8, left: 8, right: 8, flexDirection: 'row', alignItems: 'center', gap: 6 },
-  avatar: { width: 26, height: 26, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { fontSize: 11, fontWeight: '700' },
-  who: { flex: 1 },
-  handle: { color: '#fff', fontSize: 12, fontWeight: '700' },
-  sub: { color: '#fff', fontSize: 11, opacity: 0.9 },
-  chip: { position: 'absolute', paddingHorizontal: 9, paddingVertical: 3, borderRadius: radius.pill },
-  chipWide: { right: 8, bottom: 8 },
-  chipNarrow: { left: 8, bottom: 36 },
-  chipText: { color: '#fff', fontSize: 11, fontWeight: '700', fontVariant: ['tabular-nums'] },
-  tag: { position: 'absolute', left: 8, bottom: 8, maxWidth: '75%', paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.pill },
-  tagText: { color: '#fff', fontSize: 12, fontWeight: '700' },
+  chip: { position: 'absolute', backgroundColor: 'rgba(255,255,255,0.72)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.92)' },
+  who: { flexDirection: 'row', alignItems: 'center', gap: 6, height: 38, paddingLeft: 4, paddingRight: 12, borderRadius: 19 },
+  avatar: { width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' },
+  avatarText: { fontSize: 11, fontWeight: '800', color: colors.text },
+  handle: { color: colors.text, fontSize: 12, fontWeight: '700', flexShrink: 1 },
+  time: { height: 26, paddingHorizontal: 10, borderRadius: 13, justifyContent: 'center' },
+  chipText: { color: colors.text, fontSize: 12, fontWeight: '700', fontVariant: ['tabular-nums'] },
+  original: { position: 'absolute', right: 8, top: 8, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: colors.text, paddingHorizontal: 6, paddingVertical: 3 },
+  originalText: { color: colors.text, fontSize: 11, fontWeight: '800' },
 });

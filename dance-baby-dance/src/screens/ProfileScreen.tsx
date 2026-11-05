@@ -52,7 +52,7 @@ export function ProfileScreen({ handle }: { handle: string }) {
 
       <View style={styles.stats}>
         {[['Videos', counts.videos], ['Subscribers', counts.subscribers], ['Subscribed', counts.subscribed]].map(([l, n], i) => (
-          <View key={String(l)} style={[styles.stat, i > 0 && { borderLeftWidth: 1, borderLeftColor: colors.line }]}>
+          <View key={String(l)} style={[styles.stat, i > 0 && { borderLeftWidth: 1, borderLeftColor: colors.edge }]}>
             <Text style={styles.statN}>{n}</Text>
             <Text style={styles.muted}>{l}</Text>
           </View>
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   box: { borderWidth: 1, borderColor: colors.line, borderRadius: radius.md, backgroundColor: colors.surface, padding: 14, gap: 8 },
   boxTitle: { color: colors.muted, fontSize: 12, letterSpacing: 1.5, fontWeight: '700' },
   row: { flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
-  tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: colors.line },
+  tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: colors.edge },
   tab: { flex: 1, minHeight: 44, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 3, borderBottomColor: 'transparent' },
   tabOn: { borderBottomColor: colors.text },
   item: { padding: 14, borderRadius: radius.md, backgroundColor: colors.surface, gap: 2 },

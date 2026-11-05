@@ -5,7 +5,8 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from 'convex/react';
 import { api, BackendProvider, convexConfigured, useFirebaseUser } from './src/lib/backend';
 import { NavProvider } from './src/nav';
-import { colors } from './src/theme';
+import { colors, glass } from './src/theme';
+import { Backdrop } from './src/components/Backdrop';
 import { Route } from './src/types';
 import { AlertsScreen } from './src/screens/AlertsScreen';
 import { ChallengeScreen } from './src/screens/ChallengeScreen';
@@ -62,8 +63,8 @@ function Shell() {
 
   return (
     <NavProvider value={nav}>
-      <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-        <StatusBar style="light" />
+      <Backdrop><SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+        <StatusBar style="dark" />
         {!convexConfigured ? <Text style={styles.warn}>Backend not set up: add EXPO_PUBLIC_CONVEX_URL (see README).</Text> : null}
         {stack.length > 1 ? (
           <Pressable style={styles.back} onPress={back} accessibilityRole="button" accessibilityLabel="Back"><Text style={styles.backText}>‹ Back</Text></Pressable>
@@ -76,7 +77,7 @@ function Shell() {
           {tab('Alerts', { name: 'alerts' }, route.name === 'alerts', notices?.unread)}
           {user ? tab('Me', { name: 'profile', handle: 'me' }, route.name === 'profile' && route.handle === 'me') : tab('Log in', { name: 'login' }, route.name === 'login')}
         </View>
-      </SafeAreaView>
+      </SafeAreaView></Backdrop>
     </NavProvider>
   );
 }
@@ -92,15 +93,15 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.bg },
+  safe: { flex: 1 },
   body: { flex: 1 },
   warn: { color: colors.onAccent, backgroundColor: colors.sun, padding: 8, fontSize: 12, textAlign: 'center' },
   back: { minHeight: 44, paddingHorizontal: 16, justifyContent: 'center' },
   backText: { color: colors.text, fontSize: 16, fontWeight: '700' },
-  nav: { height: 62, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', borderTopWidth: 1, borderTopColor: colors.line, backgroundColor: colors.bg },
+  nav: { height: 64, marginHorizontal: 16, marginBottom: 8, borderRadius: 32, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', ...glass },
   navBtn: { paddingHorizontal: 8, paddingVertical: 8, minWidth: 56, alignItems: 'center' },
-  navText: { color: colors.muted, fontSize: 12 },
-  navOn: { color: colors.text, fontWeight: '700' },
-  plus: { width: 52, height: 38, borderRadius: 12, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
+  navText: { color: colors.muted, fontSize: 13 },
+  navOn: { color: colors.text, fontWeight: '800' },
+  plus: { width: 56, height: 44, borderRadius: 16, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
   plusText: { color: colors.onAccent, fontSize: 26, lineHeight: 28, fontWeight: '700' },
 });

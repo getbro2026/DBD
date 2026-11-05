@@ -62,6 +62,7 @@ export function SplitView({ challenge, response, responseIndex, responseCount, s
           <Text style={styles.emptyBody}>Nobody has answered this challenge yet. Tap Accept challenge to be first.</Text>
         </View>
       )}
+      <View style={[styles.vs, side && { alignSelf: 'auto', left: '50%', marginLeft: -23 }]} pointerEvents="none"><Text style={styles.vsText}>VS</Text></View>
       {!playing && (
         <View style={styles.pausedWrap} pointerEvents="none">
           <View style={styles.pausedBadge}>
@@ -74,12 +75,14 @@ export function SplitView({ challenge, response, responseIndex, responseCount, s
 }
 
 const styles = StyleSheet.create({
-  pair: { flex: 1, gap: 3 },
+  pair: { flex: 1 },
+  vs: { position: 'absolute', alignSelf: 'center', top: '50%', marginTop: -15, width: 46, height: 30, borderRadius: 15, backgroundColor: '#fff', borderWidth: 3, borderColor: '#fff', alignItems: 'center', justifyContent: 'center', shadowColor: '#783C64', shadowOpacity: 0.3, shadowRadius: 8, elevation: 4 },
+  vsText: { color: colors.text, fontSize: 14, fontWeight: '800' },
   empty: { flex: 1, backgroundColor: colors.response, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 6 },
-  emptyTitle: { color: '#fff', fontSize: 22, fontWeight: '800' },
-  emptyBody: { color: '#fff', fontSize: 14, textAlign: 'center', opacity: 0.92 },
+  emptyTitle: { color: colors.text, fontSize: 22, fontWeight: '800' },
+  emptyBody: { color: colors.muted, fontSize: 14, textAlign: 'center' },
   pausedWrap: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
-  pausedBadge: { width: 54, height: 54, borderRadius: 27, backgroundColor: 'rgba(20,12,28,0.78)', alignItems: 'center', justifyContent: 'center' },
+  pausedBadge: { width: 54, height: 54, borderRadius: 27, backgroundColor: 'rgba(255,255,255,0.8)', alignItems: 'center', justifyContent: 'center' },
   triangle: {
     marginLeft: 4,
     width: 0,
@@ -89,6 +92,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 16,
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
-    borderLeftColor: '#fff',
+    borderLeftColor: '#1C1424',
   },
 });

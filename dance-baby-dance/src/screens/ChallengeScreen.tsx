@@ -5,7 +5,7 @@ import { api, useFirebaseUser } from '../lib/backend';
 import { usePlayhead } from '../lib/usePlayhead';
 import { formatCount } from '../lib/clip';
 import { useNav } from '../nav';
-import { colors, radius } from '../theme';
+import { colors, glass, radius } from '../theme';
 import { ChallengeDetail, CommentItem } from '../types';
 import { SplitView } from '../components/SplitView';
 import { Person } from '../components/Person';
@@ -56,9 +56,8 @@ export function ChallengeScreen({ id }: { id: string }) {
       <View style={styles.stage}>
         <SplitView challenge={challenge} response={response} responseIndex={Math.min(ri, Math.max(0, count - 1))} responseCount={count} side={side} playing={playing} t={t} onTogglePlay={() => setPlaying((p) => !p)} />
       </View>
-      <View style={styles.progress}><View style={[styles.fill, { width: `${Math.min(100, (t / longest) * 100)}%` }]} /></View>
-
       <View style={styles.bar}>
+        <View style={styles.progress}><View style={[styles.fill, { width: `${Math.min(100, (t / longest) * 100)}%` }]} /></View>
         {response ? (
           <View style={styles.who}>
             <Person user={response.creator} size={36} />
@@ -72,7 +71,7 @@ export function ChallengeScreen({ id }: { id: string }) {
                 onPress={() => { if (!needLogin()) subscribe({ handle: response.creator.handle }).catch(failAlert('Could not subscribe')); }}
                 accessibilityRole="button"
               >
-                <Text style={[styles.pillText, subscribed && { color: colors.accent }]}>{subscribed ? 'Subscribed' : 'Subscribe'}</Text>
+                <Text style={[styles.pillText, subscribed && { color: colors.accentText }]}>{subscribed ? 'Subscribed' : 'Subscribe'}</Text>
               </Pressable>
             ) : null}
           </View>
@@ -87,7 +86,7 @@ export function ChallengeScreen({ id }: { id: string }) {
         <View style={styles.actions}>
           {response ? (
             <Pressable style={[styles.pill, response.likedByMe && styles.pillOn]} onPress={() => { if (!needLogin()) like({ responseId: response.id }).catch(failAlert('Could not like')); }} accessibilityRole="button" accessibilityState={{ selected: response.likedByMe }}>
-              <Text style={[styles.pillText, response.likedByMe && { color: colors.accent }]}>{response.likedByMe ? 'Liked' : 'Like'} · {formatCount(response.likeCount)}</Text>
+              <Text style={[styles.pillText, response.likedByMe && { color: colors.accentText }]}>{response.likedByMe ? 'Liked' : 'Like'} · {formatCount(response.likeCount)}</Text>
             </Pressable>
           ) : null}
           <Pressable style={styles.pill} onPress={() => setSheet('comments')} accessibilityRole="button"><Text style={styles.pillText}>Comments · {formatCount(commentCount)}</Text></Pressable>
@@ -176,27 +175,27 @@ function Report({ targetType, targetId, onDone }: { targetType: 'challenge' | 'r
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
-  stage: { flex: 1 },
-  progress: { height: 4, backgroundColor: colors.line },
-  fill: { height: 4, backgroundColor: colors.sun },
-  bar: { padding: 12, gap: 10 },
+  root: { flex: 1 },
+  stage: { flex: 1, marginHorizontal: 12, marginTop: 4, borderRadius: 28, overflow: 'hidden', borderWidth: 2, borderColor: '#fff', backgroundColor: '#fff', shadowColor: '#783C64', shadowOpacity: 0.25, shadowRadius: 20, elevation: 6 },
+  progress: { height: 4, borderRadius: 2, backgroundColor: 'rgba(28,20,36,0.1)', overflow: 'hidden' },
+  fill: { height: 4, backgroundColor: colors.accent },
+  bar: { margin: 12, padding: 12, gap: 10, borderRadius: 28, ...glass },
   who: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   handle: { color: colors.text, fontWeight: '800' },
   sub: { color: colors.muted, fontSize: 12 },
   stepRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  stepBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
+  stepBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.8)', alignItems: 'center', justifyContent: 'center' },
   stepText: { color: colors.text, fontSize: 22, lineHeight: 24 },
   muted: { color: colors.muted, fontSize: 13 },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
-  pill: { minHeight: 40, paddingHorizontal: 14, borderRadius: radius.pill, borderWidth: 1, borderColor: '#4A3D57', alignItems: 'center', justifyContent: 'center' },
+  pill: { minHeight: 44, paddingHorizontal: 14, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.line, backgroundColor: 'rgba(255,255,255,0.75)', alignItems: 'center', justifyContent: 'center' },
   pillOn: { borderColor: colors.accent },
-  pillText: { color: colors.text, fontSize: 13, fontWeight: '600' },
+  pillText: { color: colors.text, fontSize: 13, fontWeight: '700' },
   problem: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24 },
   problemTitle: { color: colors.text, fontSize: 20, fontWeight: '800' },
-  scrim: { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)' },
-  sheet: { backgroundColor: '#171020', padding: 16, paddingBottom: 28, borderTopLeftRadius: 24, borderTopRightRadius: 24, gap: 12 },
-  handleBar: { alignSelf: 'center', width: 40, height: 5, borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.3)' },
+  scrim: { flex: 1, backgroundColor: 'rgba(255,241,246,0.55)' },
+  sheet: { backgroundColor: 'rgba(255,255,255,0.94)', padding: 16, paddingBottom: 28, borderTopLeftRadius: 36, borderTopRightRadius: 36, gap: 12 },
+  handleBar: { alignSelf: 'center', width: 40, height: 5, borderRadius: 3, backgroundColor: 'rgba(28,20,36,0.25)' },
   sheetTitle: { color: colors.text, fontSize: 17, fontWeight: '800' },
-  input: { minHeight: 48, backgroundColor: colors.surface, borderWidth: 1, borderColor: '#4A3D57', borderRadius: radius.sm, color: colors.text, paddingHorizontal: 12 },
+  input: { minHeight: 48, backgroundColor: '#fff', borderWidth: 1, borderColor: colors.edge, borderRadius: radius.sm, color: colors.text, paddingHorizontal: 12 },
 });

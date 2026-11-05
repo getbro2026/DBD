@@ -32,12 +32,12 @@ export const ErrorText = ({ children }: { children?: string }) => (children ? <T
 export const errMsg = (e: unknown, fallback = 'Something went wrong. Try again.') => (e instanceof Error ? (e.message.split('Uncaught Error: ').pop() ?? fallback).split('\n')[0] : fallback);
 
 const styles = StyleSheet.create({
-  btn: { minHeight: 48, borderRadius: radius.pill, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' },
+  btn: { minHeight: 50, borderRadius: radius.pill, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' },
   primary: { backgroundColor: colors.accent },
-  ghost: { borderWidth: 1, borderColor: '#4A3D57' },
+  ghost: { borderWidth: 1, borderColor: colors.line, backgroundColor: 'rgba(255,255,255,0.7)' },
   btnText: { color: colors.onAccent, fontWeight: '800', fontSize: 15 },
   label: { color: colors.muted, fontSize: 13 },
-  input: { minHeight: 48, backgroundColor: colors.surface, borderWidth: 1, borderColor: '#4A3D57', borderRadius: radius.sm, color: colors.text, paddingHorizontal: 12, fontSize: 15 },
+  input: { minHeight: 48, backgroundColor: '#fff', borderWidth: 1, borderColor: colors.edge, borderRadius: radius.sm, color: colors.text, paddingHorizontal: 12, fontSize: 15 },
   title: { color: colors.text, fontSize: 28, fontWeight: '800', letterSpacing: -0.5 },
   muted: { color: colors.muted, fontSize: 14, lineHeight: 20 },
   error: { color: colors.danger, fontSize: 14 },

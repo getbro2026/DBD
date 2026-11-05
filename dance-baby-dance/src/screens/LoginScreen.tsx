@@ -54,5 +54,5 @@ export function LoginScreen() {
 
 const styles = StyleSheet.create({
   body: { padding: 20, gap: 14 },
-  divider: { height: 1, backgroundColor: colors.line, marginVertical: 4 },
+  divider: { height: 1, backgroundColor: colors.edge, marginVertical: 4 },
 });

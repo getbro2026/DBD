@@ -164,7 +164,7 @@ export function RecorderStep({ challenge, onRecorded, onCancel }: Props) {
       {challenge ? (
         <>
           <View style={styles.ghostFigure} pointerEvents="none">
-            <Dancer color="#6FD6DF" size={160} playing={phase !== 'idle'} opacity={0.35} />
+            <Dancer color="#17A2AE" size={160} playing={phase !== 'idle'} opacity={0.35} />
           </View>
           <View style={styles.note}>
             <Text style={styles.noteText}>Ghost overlay on · {challenge.tag}</Text>
@@ -209,25 +209,25 @@ export function RecorderStep({ challenge, onRecorded, onCancel }: Props) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#2B2236' },
+  root: { flex: 1, backgroundColor: '#FFE3EC' },
   center: { alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 },
   title: { color: colors.text, fontSize: 20, fontWeight: '800' },
   body: { color: colors.muted, fontSize: 14, textAlign: 'center' },
   cta: { backgroundColor: colors.accent, borderRadius: radius.pill, paddingHorizontal: 20, paddingVertical: 12 },
   ctaText: { color: colors.onAccent, fontWeight: '700', fontSize: 14 },
-  ghost: { borderWidth: 1, borderColor: '#4A3D57', borderRadius: radius.pill, paddingHorizontal: 16, paddingVertical: 10 },
+  ghost: { borderWidth: 1, borderColor: colors.line, backgroundColor: 'rgba(255,255,255,0.7)', borderRadius: radius.pill, paddingHorizontal: 16, paddingVertical: 10 },
   ghostText: { color: colors.text, fontSize: 14 },
   ghostFigure: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
   note: { position: 'absolute', top: 12, left: 12, backgroundColor: colors.originalChip, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 4 },
-  noteText: { color: '#fff', fontSize: 12 },
+  noteText: { color: colors.text, fontSize: 12 },
   ref: { position: 'absolute', right: 12, bottom: 150, width: 84, height: 112, borderRadius: 10, borderWidth: 2, borderColor: '#fff', backgroundColor: colors.original, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
-  refText: { position: 'absolute', bottom: 4, color: '#fff', fontSize: 11, fontWeight: '700' },
-  count: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(20,12,28,0.55)' },
-  countText: { color: '#fff', fontSize: 120, fontWeight: '800' },
+  refText: { position: 'absolute', bottom: 4, color: colors.text, fontSize: 11, fontWeight: '700' },
+  count: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,241,246,0.6)' },
+  countText: { color: colors.text, fontSize: 120, fontWeight: '800' },
   controls: { position: 'absolute', left: 16, right: 16, bottom: 56, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  recOuter: { width: 84, height: 84, borderRadius: 42, borderWidth: 5, borderColor: colors.sun, alignItems: 'center', justifyContent: 'center' },
+  recOuter: { width: 84, height: 84, borderRadius: 42, borderWidth: 5, borderColor: '#fff', alignItems: 'center', justifyContent: 'center' },
   recCore: { width: 56, height: 56, borderRadius: 28, backgroundColor: colors.accent },
   recCoreOn: { width: 28, height: 28, borderRadius: 6 },
-  time: { color: '#fff', fontSize: 13, minWidth: 80, textAlign: 'right', fontVariant: ['tabular-nums'] },
-  hint: { position: 'absolute', left: 16, right: 16, bottom: 16, color: '#fff', fontSize: 12, textAlign: 'center' },
+  time: { color: colors.text, fontSize: 13, minWidth: 80, textAlign: 'right', fontVariant: ['tabular-nums'] },
+  hint: { position: 'absolute', left: 16, right: 16, bottom: 16, color: colors.muted, fontSize: 12, textAlign: 'center' },
 });

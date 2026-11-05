@@ -59,7 +59,7 @@ export function TrendingScreen() {
 const styles = StyleSheet.create({
   root: { flex: 1, padding: 16, gap: 10 },
   chips: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
-  chip: { minHeight: 40, paddingHorizontal: 16, borderRadius: radius.pill, borderWidth: 1, borderColor: '#4A3D57', alignItems: 'center', justifyContent: 'center' },
+  chip: { minHeight: 40, paddingHorizontal: 16, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.line, backgroundColor: 'rgba(255,255,255,0.7)', alignItems: 'center', justifyContent: 'center' },
   chipOn: { backgroundColor: colors.text, borderColor: colors.text },
   chipText: { color: colors.text, fontWeight: '700' },
   row: { flexDirection: 'row', gap: 12, padding: 10, borderRadius: radius.md, backgroundColor: colors.surface, borderWidth: 1, borderColor: 'transparent' },
@@ -67,5 +67,5 @@ const styles = StyleSheet.create({
   tag: { color: colors.text, fontSize: 17, fontWeight: '800' },
   meta: { color: colors.muted, fontSize: 13 },
   spon: { alignSelf: 'flex-start', backgroundColor: colors.sun, color: colors.onAccent, fontSize: 11, fontWeight: '800', paddingHorizontal: 8, borderRadius: radius.pill, overflow: 'hidden' },
-  empty: { alignItems: 'center', gap: 12, padding: 24, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.line, borderRadius: radius.md },
+  empty: { alignItems: 'center', gap: 12, padding: 24, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.edge, borderRadius: radius.md },
 });
