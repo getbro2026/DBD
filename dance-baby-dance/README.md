@@ -1,4 +1,4 @@
-# Saathi
+# Naalnachana
 
 Dance challenges and singing duets, side by side. A person posts a step (30 seconds to 1 minute), others accept it, and each response plays beside the original with the creator tagged.
 
@@ -34,7 +34,7 @@ You need a Google account for Firebase and a free Convex account.
 2. **Authentication**, Sign-in method: turn on **Google** and **Phone**.
 3. **Storage**: create the default bucket, then paste `storage.rules` into its Rules tab and publish.
 4. **Project settings, Your apps**: add a **Web app**, then copy its config into `.env` (see `.env.example`).
-5. For phones also add an **Android app** (package `com.getbro2026.saathi`) and an **iOS app** (bundle `com.getbro2026.saathi`). Download `google-services.json` and `GoogleService-Info.plist` into this folder. For Android add your signing certificate's SHA-1 and SHA-256 fingerprints.
+5. For phones also add an **Android app** (package `com.getbro2026.naalnachana`) and an **iOS app** (bundle `com.getbro2026.naalnachana`). Download `google-services.json` and `GoogleService-Info.plist` into this folder. For Android add your signing certificate's SHA-1 and SHA-256 fingerprints.
 6. Copy the **Web client ID** (Authentication, Google provider) into `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`. In `app.json` replace `REPLACE_WITH_YOUR_IOS_CLIENT_ID` with your iOS client ID.
 7. Phone sign-in needs the Blaze (pay as you go) plan once you go past Firebase's free test numbers. Texts cost money.
 

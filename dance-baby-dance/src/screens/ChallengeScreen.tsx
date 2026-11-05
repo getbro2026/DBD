@@ -91,7 +91,7 @@ export function ChallengeScreen({ id }: { id: string }) {
             </Pressable>
           ) : null}
           <Pressable style={styles.pill} onPress={() => setSheet('comments')} accessibilityRole="button"><Text style={styles.pillText}>Comments · {formatCount(commentCount)}</Text></Pressable>
-          <Pressable style={styles.pill} onPress={() => Share.share({ message: `Try the ${challenge.tag} challenge on Saathi.` }).catch(() => {})} accessibilityRole="button"><Text style={styles.pillText}>Share</Text></Pressable>
+          <Pressable style={styles.pill} onPress={() => Share.share({ message: `Try the ${challenge.tag} challenge on Naalnachana.` }).catch(() => {})} accessibilityRole="button"><Text style={styles.pillText}>Share</Text></Pressable>
           <Pressable style={styles.pill} onPress={() => setSide((s) => !s)} accessibilityRole="button"><Text style={styles.pillText}>{side ? 'Stacked' : 'Side by side'}</Text></Pressable>
         </View>
         <View style={styles.actions}>

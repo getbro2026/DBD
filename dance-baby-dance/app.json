@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Saathi",
-    "slug": "saathi",
+    "name": "Naalnachana",
+    "slug": "naalnachana",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.getbro2026.saathi",
+      "bundleIdentifier": "com.getbro2026.naalnachana",
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
@@ -19,7 +19,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.getbro2026.saathi",
+      "package": "com.getbro2026.naalnachana",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -30,15 +30,15 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Saathi uses the camera to record your dance or song.",
-          "microphonePermission": "Saathi uses the microphone to record sound with your video.",
+          "cameraPermission": "Naalnachana uses the camera to record your dance or song.",
+          "microphonePermission": "Naalnachana uses the microphone to record sound with your video.",
           "recordAudioAndroid": true
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Saathi opens your videos so you can upload them."
+          "photosPermission": "Naalnachana opens your videos so you can upload them."
         }
       ],
       "expo-video",
