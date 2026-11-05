@@ -96,3 +96,15 @@ Before the Android build, put your `google-services.json` in this folder (Fireba
 3. In Vercel, Settings, Environment Variables, add every `EXPO_PUBLIC_FIREBASE_*` value from `.env`, and `EXPO_PUBLIC_CONVEX_URL` with the **production** Convex URL. Set `EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN` to `naalnachana.com`.
 4. Settings, Domains: add `naalnachana.com` and `www.naalnachana.com`, then set the DNS records Vercel shows at your registrar.
 5. Sign-in on your own domain: `vercel.json` forwards `/__/auth/*` to Firebase, so Google shows `naalnachana.com`. Also add `https://naalnachana.com/__/auth/handler` under Authorized redirect URIs of the Web client (Google Cloud, APIs and Services, Credentials), and add `naalnachana.com` under Firebase Authentication, Settings, Authorized domains.
+
+## Demo data (delete later)
+
+`convex/seed.ts` fills the app with 7 dummy creators, 6 challenges (one sponsored), responses, comments, likes and subscriptions. The clips are placeholder live-action samples, not dance videos: swap the URLs in `DEMO_VIDEOS` for your own.
+
+```bash
+npx convex run seed:run                          # add the demo data
+npx convex run seed:run '{"meHandle":"kamal"}'   # also give your own account alerts and subscriptions
+npx convex run seed:clear                        # remove all demo data
+npx convex run --prod seed:run                   # same, on the production deployment
+```
+Demo users have a uid starting with `demo:`, so `seed:clear` never touches real accounts.
