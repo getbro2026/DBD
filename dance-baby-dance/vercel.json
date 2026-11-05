@@ -1,0 +1,10 @@
+{
+  "installCommand": "npm install",
+  "buildCommand": "npx expo export --platform web",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/__/auth/:path*", "destination": "https://naalnachana-a087f.firebaseapp.com/__/auth/:path*" },
+    { "source": "/__/firebase/:path*", "destination": "https://naalnachana-a087f.firebaseapp.com/__/firebase/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

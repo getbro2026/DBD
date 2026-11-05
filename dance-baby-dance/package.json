@@ -33,6 +33,7 @@
     "web": "expo start --web",
     "convex": "convex dev",
     "build:web": "expo export --platform web",
+    "deploy:web": "npx vercel --prod",
     "build:apk": "eas build --platform android --profile preview",
     "typecheck": "tsc --noEmit && tsc --noEmit -p convex"
   },

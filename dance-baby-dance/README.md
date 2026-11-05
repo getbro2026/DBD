@@ -87,3 +87,12 @@ npx eas-cli build --platform android --profile preview
 ```
 
 Before the Android build, put your `google-services.json` in this folder (Firebase console, Project settings, Android app `com.naalnachana.app`). The build prints a download link for the `.apk`.
+
+## Host the web app on Vercel with naalnachana.com
+
+1. Deploy the backend to the cloud (a local Convex deployment cannot be reached from the internet):
+   `npx convex deploy`, then in the Convex dashboard (production deployment) add `FIREBASE_PROJECT_ID`.
+2. Push this repo to GitHub. In Vercel: Add New, Project, import it, and set **Root Directory** to `dance-baby-dance`. `vercel.json` already sets the build command and output folder.
+3. In Vercel, Settings, Environment Variables, add every `EXPO_PUBLIC_FIREBASE_*` value from `.env`, and `EXPO_PUBLIC_CONVEX_URL` with the **production** Convex URL. Set `EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN` to `naalnachana.com`.
+4. Settings, Domains: add `naalnachana.com` and `www.naalnachana.com`, then set the DNS records Vercel shows at your registrar.
+5. Sign-in on your own domain: `vercel.json` forwards `/__/auth/*` to Firebase, so Google shows `naalnachana.com`. Also add `https://naalnachana.com/__/auth/handler` under Authorized redirect URIs of the Web client (Google Cloud, APIs and Services, Credentials), and add `naalnachana.com` under Firebase Authentication, Settings, Authorized domains.
